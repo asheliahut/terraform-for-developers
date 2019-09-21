@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Terraform For Developers</title>
+
+		<meta name="description" content="Teaching terraform to a software engineer, when and how to use off the shelf modules and how to customize them for your needs.">
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-merriweather theme-color-sky-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section data-id="fc395fae47e8512d9d860ef90416d729"><div class="sl-block" data-block-type="text" style="width: 806px; left: 68px; top: 184px; height: auto;" data-block-id="e4d27418512838df5bdcb3cca2dab5c3"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="text-align: center; z-index: 11;">
+<h2>                 <span style="font-size:1.0em">For      Developers</span>
+</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="22d4cff5027de663c419b69c431d88f9" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 389px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; border-width: 1px;" dir="ui">
+<p>By: Ashley Hutson<br>
+Twitter: @asheliahut</p>
+
+<p>Slides: <a href="https://github.com/asheliahut/terraform-for-developers-talk" target="_blank">https://github.com/asheliahut/terraform-for-developers-talk</a></p>
+</div></div>
+
+<div class="sl-block" data-block-type="image" data-block-id="e78bbffada1e83773f939ad7eae9ad1f" style="min-width: 4px; min-height: 4px; width: 326px; height: 163px; left: 194px; top: 140px;"><div class="sl-block-content" style="z-index: 13;"><img data-natural-width="480" data-natural-height="240" style="" data-lazy-loaded="" data-src="terraform-for-devs/953b4ed7e83d30e855f39a804a966f11.png"></div></div>
+<div class="sl-block" data-block-type="image" data-block-id="e312c5bc927f138d7f516125e6fa1c5a" style="min-width: 4px; min-height: 4px; width: 376px; height: 140px; left: 6px; top: 0px;"><div class="sl-block-content" style="z-index: 14;"><img data-natural-width="2500" data-natural-height="932" style="" data-lazy-loaded="" data-src="terraform-for-devs/0ea38259f9aaf1b74441667510e415c7.png"></div></div></section><section data-id="c5e9b192ec62b0d1a361f38be99055d1"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="5cab963a4d7486f78f77ca2d554cda43"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>How My Infrastructure Became Unmanageable</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 186px;" data-block-id="7bf30f78c484997cc828f66dfd971451"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" dir="ui">
+<ul>
+	<li style="text-align:left">My work at McGraw Hill Education
+	<ul>
+		<li style="text-align:left">Building large scale applications</li>
+		<li style="text-align:left">Microservices</li>
+	</ul>
+	</li>
+	<li style="text-align:left">Have you ever had an application get to complex and needing many cloud services tying them all together?</li>
+	<li style="text-align:left">SECRET management and how to get those in a secure location easily</li>
+	<li style="text-align:left">Wanting to share my infrastructure designs with teammates and others.</li>
+</ul>
+</div></div>
+
+
+
+
+
+
+
+</section><section data-id="e9bbe90f5ec7b9b8e7c602b9d9c594e7"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="98b212228f71a6e6c0a26d507079b666"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Why Teach This to an Application Developer?</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 202px;" data-block-id="20cfea4eeea9fd4a2eb02d41145c484c"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" dir="ui">
+<ul>
+	<li style="text-align:left">There is a high likely chance if you work at a large company there is an SRE team/Dev Ops person but they may build things that you can help with or improve</li>
+	<li style="text-align:left">Mostly terraform code needs small variable changes per application and understanding it is important.</li>
+	<li style="text-align:left">You should want to know what pieces you are putting together to build your application without pulling in extra hardware saving money</li>
+</ul>
+</div></div>
+
+
+
+
+
+
+
+</section><section class="stack" data-id="53331a4f87303b11a76224ae8e144186"><section data-id="c312e8e28b430cb49923461295510ac6"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="59d47f1ea27b71e4eb98d7c24a04d6ed"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11;">
+<h2>What is Terraform</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 160px;" data-block-id="6113997220e8cde69d6c07692d075324"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li style="color:rgb(34, 34, 34)">A tool to manage infrastructure as code</li>
+	<li style="color:rgb(34, 34, 34)">Allows for creating sharable components to build out and tie each piece of cloud components together.</li>
+	<li style="color:rgb(34, 34, 34)">It is platform agnostic with support for (AWS, GCP, Azure, OpenStack and many more)</li>
+	<li style="color:rgb(34, 34, 34)" class="fragment" data-fragment-index="0">Easy way to make a pizza get delivered on every new production build :P </li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" data-block-id="f8227304f6382da8076cdcde2646e3d6" style="min-width: 4px; min-height: 4px; width: 246px; height: 184px; left: 357px; top: 490px;"><div class="sl-block-content fragment" style="z-index: 13;" data-fragment-index="0"><img data-natural-width="800" data-natural-height="599" style="" data-lazy-loaded="" data-src="terraform-for-devs/03e481bc670dc4c62b40c025d6c34578.jpg"></div></div></section><section data-id="4166f71534f344d6d7b3ad3d75f2567a"><div class="sl-block" data-block-type="text" style="width: 441px; left: 31px; top: 69px; height: auto;" data-block-id="3d0dea1c59f03143fd92c7bd8967d0fb"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 11;">
+<h2>What Version?</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 836px; left: 29px; top: 184px; height: auto;" data-block-id="175b83d569b9fed9d66e4ba08ecc5fcd"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 13; text-align: left;">
+<ul>
+	<li>Terraform has an odd versioning scheme
+	<ul>
+		<li>Current version is v0.12.x</li>
+		<li>Most documentation is about v0.11.x</li>
+	</ul>
+	</li>
+	<li>v0.12.x Is not backwards compatible with v0.11.x</li>
+	<li>Save yourself some headache and go with v0.12.x</li>
+</ul>
+</div></div>
+
+
+</section><section data-id="a7c42f09bbc73cc85c1c1322ca008087"><div class="sl-block" data-block-type="text" style="width: 417px; left: 15px; top: 105px; height: auto;" data-block-id="04e4c3c93e6b4170ba41eb3ec9aae50e"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Version 11 Pros</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 384px; left: 48px; top: 210px; height: auto;" data-block-id="4fe969d3184209a272a54f32d933c566"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin urna odio, aliquam vulputate faucibus id, elementum lobortis felis. Mauris urna dolor, placerat ac sagittis quis." style="text-align: left; z-index: 11;">
+<ul>
+	<li>Has more documentation</li>
+	<li>More off the shelf modules already tested</li>
+	<li>Many ways to do the same thing because of lack of types. (can be a pro or con)</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 432px; left: 528px; top: 105px; height: auto;" data-block-id="d904fa1d1a1bb891b8862c57fdd743df"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 12;">
+<h2>Version 12 Pros</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 384px; left: 528px; top: 210px; height: auto;" data-block-id="d12b103ed8f22ab860df0a1d8e1d7fb9"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin urna odio, aliquam vulputate faucibus id, elementum lobortis felis. Mauris urna dolor, placerat ac sagittis quis." style="text-align: left; z-index: 13;">
+<ul>
+	<li>Has type system</li>
+	<li>Has first class iteration support</li>
+	<li><span>First-class expression syntax (Can determine values from types vs strings only)</span></li>
+</ul>
+</div></div></section><section data-id="f12cd378736f419c73f86ad3872c910a"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="b73cee2aa0637c6a9e16523b5f1a2d64"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11;">
+<h2>How Do I Install?</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 160px;" data-block-id="058461e3e41bb75eec006be9329642cc"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li style="color:rgb(34, 34, 34)">Start by downloading terraform for your Operating System
+	<ul>
+		<li style="color:rgb(34, 34, 34)"><a href="https://www.terraform.io/downloads.html" target="_blank">https://www.terraform.io/downloads.html</a></li>
+	</ul>
+	</li>
+	<li style="color:rgb(34, 34, 34)">Make sure terraform is available in your PATH
+	<ul>
+		<li style="color:rgb(34, 34, 34)">Linux: /usr/local/bin or /usr/bin</li>
+		<li style="color:rgb(34, 34, 34)">Mac: Use homebrew or add to PATH manually</li>
+		<li style="color:rgb(34, 34, 34)">Windows: Manually add to your PATH</li>
+	</ul>
+	</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="725d22ec55def8456ec2bb763c93b6c4" style="min-width: 30px; min-height: 30px; width: 811px; height: 120px; left: 74px; top: 510px;"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" data-code-frame="osx" style="z-index: 13;"><pre class="bash"><code data-line-numbers="">echo $PATH
+/this/is/going/to/be/long/help/me:/next/path/is/long:/why/does/path/never/end</code></pre></div></div></section></section><section class="stack" data-id="09c8ca74d0556415845394a0c9686964"><section data-id="8c8552c37a8eeca3fc6f82123a827419"><div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 84px; height: auto;" data-block-id="c0b4988174b81e0ae73894536fe73892"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>What is HCL?</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="92cad423525d1299f1cd6444f788e7f7"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>HCL = Hasicorp Configuration Language</p>
+
+<p> </p>
+
+<p>This is a layer on top of JSON</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 500px; height: 560px; left: 442px; top: 70px;" data-block-id="15666641313f1491b4c8f12c298e5214"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 12;"><pre class="bash"><code>provider "aws" {
+  version    = "2.11"
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key}"
+  region     = var.aws_region
+}
+
+module "cloudwatch" {
+  source      = "./modules/cloudwatch"
+  name        = var.cloud_log_name
+}</code></pre></div></div></section><section data-id="972a4d9adf1c5314704ef72b12c2a8bc"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="af62c83af73fe086f8db90469a7a9960"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11;">
+<h2>Base HCL Rules</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 140px;" data-block-id="a8f2778c9a6fd70721a7fb8c32c1c696"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>All code is written in stanzas or blocks</li>
+	<li>Blocks consist of Key = Value pairs.</li>
+	<li>Comments begin with # for single line and multi line are /* */</li>
+	<li>Lists are [] and maps are {}
+	<ul>
+		<li>Maps are like json key value</li>
+		<li>Lists are like non associative arrays for php</li>
+	</ul>
+	</li>
+	<li>All strings must be "double quotes"</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="0335ba5fe40aef44af2f02399ec660cb" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 186px; top: 583px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p><span style="font-size:0.7em">Source: <a href="https://www.linode.com/docs/applications/configuration-management/introduction-to-hcl/" target="_blank">https://www.linode.com/docs/applications/configuration-management/introduction-to-hcl/</a></span></p>
+</div></div></section></section><section class="stack" data-id="3cf5890bdaecd69395da4e7b1cc91f42"><section data-id="b9242776a01c235427d6a2bfc27bdac6"><div class="sl-block" data-block-type="text" style="width: 737px; left: 29px; top: 84px; height: auto;" data-block-id="77975288a3717308544fa6997ec59e87"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 11;">
+<h2>Terraform File Structure</h2>
+</div></div>
+
+
+
+
+<div class="sl-block" data-block-type="image" data-block-id="99d806e7eda67cb571190f70370f2f2c" style="min-width: 4px; min-height: 4px; width: 924px; height: 178px; left: 18px; top: 261px;"><div class="sl-block-content" style="z-index: 12;"><img data-natural-width="1298" data-natural-height="250" style="" data-lazy-loaded="" data-src="terraform-for-devs/e5112feb5079616be53d7efb41579d56.png"></div></div></section><section data-id="097b7d9f4b19e00fac0cb797436dd829"><div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 84px; height: auto;" data-block-id="938af0766058fa3dc70cffbe6299da2f"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Main.tf</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="3e0457ed9c5c38c1d944c6b3c813ed5e"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>This is the starting point for all code to run </p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 120px; top: 280px; height: auto;" data-block-id="631b70fa476658c3db80563510293983"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;" data-fragment-index="0">
+<p>The terraform code will always start with a provider or variables defined they can share a same space but it is not prefered. Always separate variables from resources and modules.</p>
+</div></div>
+</section><section data-id="bda37adc71772e2ebcba3e67de464e8b"><div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 84px; height: auto;" data-block-id="222284559710d93223f24e3c6b5ee72c"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Variables.tf</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="ced25eac63eaba226721234aa32ab73f"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>This is where all base high level variables are defined</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 120px; top: 280px; height: auto;" data-block-id="06f9e7ae114da3d8d889dc00a1b682d0"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;" data-fragment-index="0">
+<p>All variables used for your application as a whole are stored in this file. You may think though that this is a security issue because of secrets but there are ways around that. This file does not store computed values either.</p>
+</div></div>
+</section><section data-id="372fd4af438f84b02c17ffdfc902187d"><div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 84px; height: auto;" data-block-id="d76764af43cae224a4dc2111241ee573"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 11;">
+<h2>outputs.tf</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="24a691add6ba630b04f5b715577cf6ce"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;">
+<p>Allows resources and variables to be accessed outside scope.</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 122px; top: 305px; height: auto;" data-block-id="ba6996dc31c43493bfc1e04328a5eb39"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 13; text-align: left;" data-fragment-index="0">
+<p>The outputs file houses a structure similar to that of variables but each have a type of output and the value references the resource or module from which the values come. This allows for pulling nested resources.</p>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="8f4b1403f0adb0432404603576e974e2" style="min-width: 30px; min-height: 30px; width: 730px; height: 122px; left: 115px; top: 518px;"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" data-code-frame="osx" style="z-index: 14;"><pre class="bash"><code data-line-numbers="">output "alb_name" {
+  value = "${module.service_alb.alb_name}"
+}</code></pre></div></div></section><section data-id="5f3dad764e9096bd1bf76f272c175d3f"><div class="sl-block" data-block-type="text" style="width: 531px; left: 29px; top: 87px; height: auto;" data-block-id="3933d0dd7ebd4a2ec66b28f56562b776"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>modules directory</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 161px; height: auto;" data-block-id="0f5b8ccbe8e5cb4f4e553aa9808fb36f"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>This is storage of each piece of infrastructure broken down.</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 120px; top: 280px; height: auto;" data-block-id="38d85dffd4b95163bdc9767ac938aa29"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;" data-fragment-index="0">
+<p>If creating a new AWS application with an RDS node and elasticache tied to your EC2 instance you would want 1 module for RDS, 1 module for elasticache, and 1 module for EC2.</p>
+</div></div>
+</section><section data-id="305c3ab3bb49d020c12b3701ee7072e0"><div class="sl-block" data-block-type="text" style="width: 575px; left: 29px; top: 89px; height: auto;" data-block-id="68f354f8764d0254647319638088affb"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>.terraform directory</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 156px; height: auto;" data-block-id="3c87b5c4a1f7f733efaecebf5ad94fc9"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>This holds local run data of terraform.</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 120px; top: 280px; height: auto;" data-block-id="729845753ab874695534e5908b75e922"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;" data-fragment-index="0">
+<p>This directory is vital and important for running terraform locally on a computer. If you choose to go further and integrate with a CI provider or hook up to a backend this becomes less of an important piece.</p>
+</div></div>
+</section></section><section data-id="a494e7c2be3e6192c1e18c3db12574c1"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="562f1ab233be7569cb366fbb39c59e5f"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2 style="color:rgb(51, 51, 51)">Components of Terraform</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 140px;" data-block-id="744b2d788ccf5be35ca8cfd271bb1541"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>Variables</li>
+	<li style="color:rgb(51, 51, 51)">Providers</li>
+	<li style="color:rgb(51, 51, 51)">Modules</li>
+	<li style="color:rgb(51, 51, 51)">Resources</li>
+	<li style="color:rgb(51, 51, 51)">Templates</li>
+	<li>Data Sources</li>
+</ul>
+</div></div></section><section class="stack" data-id="2174c78798acbfe095202aab50ba7c21"><section data-id="7471a91a7cb11e4bd81b22cbd8d7dda4"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 140px; height: auto;" data-block-id="ad2c00dd1e9dc23e3c5513c798638461"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Variables</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 263px; height: auto;" data-block-id="5c1bda0e77dd11f8a189eb7a243250ad"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>They are just like any other programming language like PHP</li>
+	<li>You use them to set a value that can be overridden or used to reference and keep your code DRY</li>
+	<li>Descriptions are not mandatory but highly encouraged</li>
+	<li>Only a value is needed to be set</li>
+	<li>These are objects with a key value pair of value = "value"</li>
+</ul>
+</div></div></section><section data-id="eff9b85b814b27dfd5187cb8c7a115ad"><div class="sl-block" data-block-type="text" style="width: 506px; left: 33px; top: 72px; height: auto;" data-block-id="50a3301fb8aee950f3825388e46c4533"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 11;">
+<h2>Variables Example</h2>
+</div></div>
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 800px; height: 524px; left: 80px; top: 164px;" data-block-id="c0a7e62c20dc9a38e78d7b64c600102a"><div class="sl-block-content notranslate" data-highlight-theme="a11y-dark" data-code-frame="osx" style="z-index: 13; font-size: 89%;"><pre class="php"><code style="padding: 7px;"># Single Variable
+variable "aws_region" {
+  description = "AWS Region"
+  default     = "us-east-1"
+}
+
+# List type
+variable "application_ports" {
+  type = list(object({
+    internal = number,
+    external = number,
+    protocol = string
+  }))
+  default = [
+    {
+      internal = 8080
+      external = 80
+      protocol = "tcp"
+    },
+    {
+      internal = 8081
+      external = 443
+      protocol = "tcp"
+    }
+  ]
+}</code></pre></div></div></section><section data-id="a0b9b90cc9b7a9976c9f3f174849a3e8"><div class="sl-block" data-block-type="text" style="width: 413px; left: 530px; top: 78px; height: auto;" data-block-id="5ec095a48a979ea4056e8114e01b43d7"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>How to Reference</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 530px; top: 252px; height: auto;" data-block-id="23c31420ea37700a59a763fe8af0ddd9"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>To Access the scope of a variable you just need to pull it from where it lives.</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 500px; height: 560px; left: 11px; top: 70px;" data-block-id="8dd2b5be93931ff23f19faa7b580fb66"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 12;"><pre class="bash"><code>provider "aws" {
+  version    = "2.11"
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+  region     = var.aws_region
+}
+
+module "cloudwatch" {
+  source      = "./modules/cloudwatch"
+  name        = var.cloud_log_name
+}</code></pre></div></div></section><section data-id="f67378cf61a908f1296e3ccb596a4a18"><div class="sl-block" data-block-type="text" style="width: 413px; left: 18px; top: 84px; height: auto;" data-block-id="9ca228babcd1d43e384b44af02e205ea"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Ternary</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 18px; top: 158px; height: auto;" data-block-id="d17cfb8145636da915c8e1c8df57b35b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>Change interpolation of variables based on conditional data</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 924px; height: 305px; left: 18px; top: 325px;" data-block-id="507b36b3c59dcfe51aed86495518c634"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 13;"><pre class="bash"><code>module "elasticache" {
+  source                  = "./modules/elasticache"
+  project_name            = var.project_name
+  environment_name        = var.env
+  engine_version          = var.engine_version
+  instance_type           = "${var.env == "production" ? var.prod_size : var.dev_size}"
+}</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 514px; top: 158px; height: auto;" data-block-id="8c4f92c952a08da83153c08782a1c815"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 14; text-align: left;" dir="ui">
+<p>In v0.11 this was used with many hacks many of these were fixed in v0.12</p>
+</div></div></section><section data-id="1e42d93f60cc5ccbee4e733beae34ce9"><div class="sl-block" data-block-type="text" style="width: 413px; left: 274px; top: 66px; height: auto;" data-block-id="17054dbc02e7175739d59994d5ae9df6"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: center; z-index: 11;">
+<h2>Functions</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 530px; top: 163px; height: auto;" data-block-id="08bc20f0f43b8ed42b61e6774aa326cd"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;">
+<p>There are many built in terraform functions for computing and doing actions to variables.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="3af624b453b08011134d2e1b7b92930a" style="height: auto; min-width: 30px; min-height: 30px; width: 400px; left: 0px; top: 163px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<ul>
+	<li>Numeric
+	<ul>
+		<li>abs</li>
+		<li>ceil</li>
+	</ul>
+	</li>
+	<li>String
+	<ul>
+		<li>chomp</li>
+		<li>join</li>
+		<li>regex</li>
+	</ul>
+	</li>
+	<li>Hash
+	<ul>
+		<li>sha1</li>
+	</ul>
+	</li>
+	<li>So many more</li>
+</ul>
+</div></div></section></section><section class="stack" data-id="5186c861f9e4496a6c795f7c6efa2aa3"><section data-id="72e7fd02551ac7e3f1648a539645ffc0"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 140px; height: auto;" data-block-id="cccfa5a1d4b3547e79e5fe53f4c4c820"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Providers</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 263px; height: auto;" data-block-id="3c23861f42113618127b284ed7602f5c"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>These are used to reference the cloud system or local system in which you are trying to run against.
+	<ul>
+		<li>AWS/GCP</li>
+	</ul>
+	</li>
+	<li>There are no providers that can just do all clouds so you must do each separately if trying to deploy to multi cloud.</li>
+	<li>These can be used for more than just base infrastructure. You can create providers for any type of API (example: dominos or datadog)</li>
+</ul>
+</div></div></section><section data-id="98148383c049f2f0b42fa0f2db3a6970"><div class="sl-block" data-block-type="text" style="width: 413px; left: 530px; top: 78px; height: auto;" data-block-id="26e506851153ee855a2d2fc397eecfc2"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Infastructure</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 530px; top: 163px; height: auto;" data-block-id="5d24d9b0762e9567119e984d2af227fd"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>These are the most common types of providers used when writing Terraform code.</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 500px; height: 560px; left: 11px; top: 70px;" data-block-id="8bb1c00e55d3aef7284f9827f6b07398"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 12;"><pre class="bash"><code>provider "aws" {
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+  region     = var.aws_region
+  version    = var.aws_version
+}
+
+provider "google" {
+  credentials = file("account.json")
+  project     = var.gcp_project
+  region      = var.aws_region
+  version     = var.gcp_version
+}
+
+# Configure the Azure Provider
+provider "azurerm" {
+  version = "=1.34.0"
+}</code></pre></div></div></section><section data-id="61a865294d15a7d6763c6dd0d4adc6df"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 70px; height: auto;" data-block-id="bcb9502bf5c1037920f9495cf475b247"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11;">
+<h1>PLEASE REMEMBER TO SET VERSIONS!</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" data-block-id="c188f5f8e166a923ffc4bdf1e4144416" style="min-width: 4px; min-height: 4px; width: 320px; height: 286px; left: 320px; top: 335px;"><div class="sl-block-content" style="z-index: 12;"><img data-natural-width="320" data-natural-height="286" style="" data-lazy-loaded="" data-src="terraform-for-devs/b403cf0902a8dd51fc1b71ee949e81c2.gif"></div></div></section><section data-id="9008fb8d6eb9b5cb4311aa9d35ff7a26"><div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 84px; height: auto;" data-block-id="bddaa00ff99c79e24b72e294b3ba704d"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Misc</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="c41a20973f5c1fd1c67d42bbf36837f3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>Providers can be found for infrastructure monitoring tools that are backed by APIs</p>
+
+<p> </p>
+
+<p>This can be powerful to have a single place for all component needs for your application down to your source control</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 500px; height: 560px; left: 442px; top: 70px;" data-block-id="7691909aaff9e9efaefc787f25dc875a"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 12;"><pre class="bash"><code>provider "datadog" {
+  api_key = var.datadog_api_key
+  app_key = var.datadog_app_key
+}
+
+# Configure the PagerDuty provider
+provider "pagerduty" {
+  token = var.pagerduty_token
+}
+
+# Configure the GitHub Provider
+provider "github" {
+  token        = var.github_token
+  organization = var.github_organization
+}
+
+# Configure the Cloudflare provider
+provider "cloudflare" {
+  email = var.cloudflare_email
+  token = var.cloudflare_token
+}</code></pre></div></div></section><section data-id="bfc42303b3cdbc163e498c0d5e83945a"><div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 84px; height: auto;" data-block-id="080cffc35c48b66e32e940b72e7175d5"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>3rd Party</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="76c4696ae83be7ff8072e2e06a928539"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>There are people who will wrap other apis into providers so you can call. Remember if it has a JSON payload it is easily replicable in HCL.</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 500px; height: 560px; left: 442px; top: 70px;" data-block-id="ef2336a014474888afc781acb896a50a"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 12;"><pre class="bash"><code>provider "dominos" {
+  first_name    = var.dom_first_name
+  last_name     = var.dom_last_name
+  email_address = var.dom_email
+  phone_number  = var.dom_phone
+
+  credit_card {
+    number = var.dom_card.num
+    cvv    = var.dom_card.cvv
+    date   = var.dom_card.date
+    zip    = var.dom_card.zip
+  }
+}
+
+# External DB provider for big data
+provider "snowflake" {
+  account = "..."
+  role    = "..."
+  region  = "..."
+}</code></pre></div></div></section></section><section class="stack" data-id="3143d1b96965fbea7fb3c818f7ddcc18"><section data-id="7461caba52bcf02bb27e8d8ec5fae10a"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 88px; height: auto;" data-block-id="fcb6bc91bd4d5834311c3d61d22e9628"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Modules</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 219px; height: auto;" data-block-id="41798e0f5d6ce0820a1a2ca87723c74e"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>After having some providers set up the next step is to figure out each component of the infrastructure and how to break it apart</li>
+	<li>Each module is set up with the same file structure as your top level.
+	<ul>
+		<li>Main.tf</li>
+		<li>variables.tf</li>
+		<li>outputs.tf</li>
+	</ul>
+	</li>
+	<li>Outputs become more valuable here as you will be refrencing these across modules in your application top level</li>
+</ul>
+</div></div></section><section data-id="fad806dbff69ac62b0d9619b21fe0643"><div class="sl-block" data-block-type="text" style="width: 413px; left: 274px; top: 82px; height: auto;" data-block-id="ccb15e9c5c88e18889e66cf9da1fbd4e"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: center; z-index: 10;">
+<h2>Main.tf</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 274px; top: 179px; height: auto;" data-block-id="f9461dd9c609c94fb7d6fb739e72262a"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>These are lists of resources and templates</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 905px; height: 280px; left: 28px; top: 342px;" data-block-id="025be373aae3cc9f0f1adbe6b3ecaf44"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 12;"><pre class="bash"><code>resource "aws_db_parameter_group" "rds_parameter_group" {
+    name   = ${var.name"-"var.environment"-rds-pg-11"}
+    family = "postgres11"
+}
+
+data "template_file" "event_rule" {
+    template = file("${path.module}/event-rule.json")
+    vars {
+        cluster_arn = aws_ecs_cluster.default.id
+    }
+}</code></pre></div></div></section><section data-id="d7fe6ecbdf91763d20510e88c3609a7c"><div class="sl-block" data-block-type="text" style="width: 624px; left: 29px; top: 84px; height: auto;" data-block-id="3d0610ac6e9314846eb18751cbf011d3"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Examples Directory</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="dc66af9ddaa8580198e82e3b49dd12d0"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>Include this as a bonus</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 120px; top: 280px; height: auto;" data-block-id="3d7f534eed4e8d1f746c4c7ba0efbf70"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;" data-fragment-index="0">
+<p>Fill out a full definition of the module and how to use it in a file that would call the module.</p>
+</div></div>
+</section><section data-id="581d1488d0dceca4c2c9beb7806ad1e7"><div class="sl-block" data-block-type="text" style="width: 624px; left: 29px; top: 84px; height: auto;" data-block-id="b516207ad4e0c8a38af5d364b8233dbd"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 11;">
+<h2>External Modules</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="dd0bca2826d2dc60567f8ddf1843fcf0"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;">
+<p>How to call official modules</p>
+</div></div>
+
+
+
+<div class="sl-block" data-block-type="code" data-block-id="0cce812dd95f49a23f34bc853e506ad3" style="min-width: 30px; min-height: 30px; width: 800px; height: 447px; left: 80px; top: 225px;"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" data-code-frame="osx" style="z-index: 13;"><pre class="bash"><code data-line-numbers=""># Pull from terraform source and don't write own modules
+module "ec2_cluster" {
+  source                 = "terraform-aws-modules/ec2-instance/aws"
+  version                = "~&gt; 2.0"
+
+  name                   = "my-cluster"
+  instance_count         = 5
+
+  ami                    = "ami-ebd02392"
+  instance_type          = "t2.micro"
+  key_name               = "user1"
+  monitoring             = true
+  vpc_security_group_ids = ["sg-12345678"]
+  subnet_id              = "subnet-eddcdzz4"
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}</code></pre></div></div></section><section data-id="01ebd55d70845f4978bad599354bec32"><div class="sl-block" data-block-type="text" style="width: 624px; left: 29px; top: 84px; height: auto;" data-block-id="b04dc43caa79bfd5601caba026588088"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>External Modules</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 158px; height: auto;" data-block-id="d39779ddc4026d65e9f9b5b085a0e93b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>How to call custom modules</p>
+</div></div>
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 902px; height: 242px; left: 29px; top: 299px;" data-block-id="4c6f41506b1d34abc5b49ee19a85a0d6"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" data-code-frame="osx" style="z-index: 12;"><pre class="bash"><code data-line-numbers="">module "cool_thing" {
+  source = "git::git@github.com:enthought/terraform-modules.git/cool_thing?ref=v0.1.0"
+  var_one = "foo"
+  var_two = "bar"
+}</code></pre></div></div></section></section><section class="stack" data-id="b052274a947b84f22f923d244edfe512"><section data-id="8583022173baeeb6fee2225fa5c893b1"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 88px; height: auto;" data-block-id="d92bc0cc0aad439e7401ad7783a88084"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Resources</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 219px; height: auto;" data-block-id="5f004f130df7057d9aed63f6b82ce36a"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>This is the definition of each piece needed for a piece of infrastructure. It amounts to an api call definiton of JSON.</li>
+	<li>A resource can be an EC2 instance or it can be a S3 bucket all the way to a permissions object for them</li>
+</ul>
+</div></div></section><section data-id="d63e0da0f54acc4b910e3a17e08d8630"><div class="sl-block" data-block-type="text" style="width: 506px; left: 33px; top: 72px; height: auto;" data-block-id="645e73a199b9387f9118ebda53f3114d"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Resource Example</h2>
+</div></div>
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 800px; height: 524px; left: 80px; top: 164px;" data-block-id="573beabb8a0c1f250576b5ccaccf0106"><div class="sl-block-content notranslate" data-highlight-theme="a11y-dark" data-code-frame="osx" style="z-index: 11; font-size: 89%;"><pre class="php"><code style="padding: 7px;">resource "aws_instance" "web" {
+  ami           = "ami-a1b2c3d4"
+  instance_type = "t2.micro"
+}
+
+resource "aws_iam_role" "lambda_iam_role" {
+    name               = ${var.name"-"var.environment"-ecs-scale-role"}
+    assume_role_policy = data.aws_iam_policy_document.lambda_role_document.json
+}
+
+# Create a new monitor
+resource "datadog_monitor" "default" {
+  # ...
+}
+
+# Create a new timeboard
+resource "datadog_timeboard" "default" {
+  # ...
+}</code></pre></div></div></section><section data-id="28a5ba0ae7fb3fd3e2b42df19acf430c"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="133ae3bccf2a2667b4ef54a54baf69ca"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Resources Follow Docs</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 140px;" data-block-id="f1359b776a64118a9721504eb824b1f0"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>If one of the resources you are looking for is confusing just look at the documentation</li>
+	<li>Example: If you are trying to build an RDS instance and not sure all the side resources needed to stand it up go to <a href="https://registry.terraform.io/modules/felipefrizzo/rds-mysql/aws/0.0.2?tab=inputs" target="_blank">https://registry.terraform.io/modules/felipefrizzo/rds-mysql/aws/0.0.2?tab=inputs</a>
+</li>
+	<li>
+<a href="https://registry.terraform.io" target="_blank">https://registry.terraform.io</a> is your fried.</li>
+</ul>
+</div></div></section><section data-id="d8f22bdeb17fcb19c696f8838ad99800"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="223ae91b49b725b8554539fcb2eb5d2d"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Lifecycle Events</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 140px;" data-block-id="e09897537ec4848e2166c48b7e28842c"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>prevent_destroy : bool</li>
+	<li>create_before_destroy : bool</li>
+	<li>ignore_changes: list of keys</li>
+	<li>timeouts: object (this is not always available for all resources)</li>
+</ul>
+</div></div></section><section data-id="9c92e5b9f2d0263de8d56fb1612d4165"><div class="sl-block" data-block-type="text" style="width: 539px; left: 29px; top: 76px; height: auto;" data-block-id="c9a858278419e3280b7161f7ba5f1128"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>prevent_destroy</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 157px; height: auto;" data-block-id="59648c1c4312e51ee3e3544575feacc4"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>Stops resouce from being destroyed on destroy</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 120px; top: 280px; height: auto;" data-block-id="70a92951398078d548c6dec3d5a65bac"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;" data-fragment-index="0">
+<p>This value can save you many times over by applying it to a database. Making sure your data is safe and secure.</p>
+</div></div>
+</section><section data-id="7ce9298ca16253c5377f2c487a185159"><div class="sl-block" data-block-type="text" style="width: 682px; left: 29px; top: 70px; height: auto;" data-block-id="1c91a819f27d4f778cea7c24cc8c3d78"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>create_before_destroy</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 157px; height: auto;" data-block-id="f247561779da3efbc90f1439f8514f0b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>This is important from stopping downtime</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 120px; top: 280px; height: auto;" data-block-id="ed57588a7a7b47c80ea152538aea3048"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;" data-fragment-index="0">
+<p>This is used heavily for replacing new EC2 Instances or Google apps this allows for new instances to be created or auto scaling groups and then the flip to the resource will occur before destroying the old one. One less problem during deploys!</p>
+</div></div>
+</section><section data-id="8c4fa0384a1285acb8af9b656c84810c"><div class="sl-block" data-block-type="text" style="width: 682px; left: 29px; top: 70px; height: auto;" data-block-id="f923aa90f6bcbc9120e1e0ae7bf47d76"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>ignore_changes</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 157px; height: auto;" data-block-id="7138e7044c6f24b01e47971c305fb8cf"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p>If you want to manage something outside terraform</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 120px; top: 280px; height: auto;" data-block-id="e9730907272a9bb7f782d33e12a39247"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;" data-fragment-index="0">
+<p>This is used when using a service that provides automatic updates for instance if you use automated updates for RDS you can ignore the engine_version so when you push the next time it will go through just fine without complaining the version isn't in sync.</p>
+</div></div>
+</section><section data-id="1a158a40b855d0934662fee8b7c73ddf"><div class="sl-block" data-block-type="text" style="width: 682px; left: 29px; top: 70px; height: auto;" data-block-id="a92293a23a96e889b6dd1e7c74938b8f"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 11;">
+<h2>timeouts</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 157px; height: auto;" data-block-id="4efc5667ecaaa079cbb7f6cdc8982807"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left;">
+<p>This can be super important for slow APIs (aws cough cough)</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="text" style="width: 733px; left: 121px; top: 295px; height: auto;" data-block-id="95ab388e7a3d28ce7ebaa4d6181e322f"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 13; text-align: left;" data-fragment-index="0">
+<p>There are many times throughout the day where cloud provider apis get overwhelmed and placing something like a new EC2 instance can take a long time this allows for the operation to wait it out longer before deeming the apply bad.</p>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="321cef0080f9bba959493bf9d8e83e79" style="min-width: 30px; min-height: 30px; width: 585px; height: 150px; left: 188px; top: 528px;"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" data-code-frame="osx" style="z-index: 14;"><pre class="bash"><code data-line-numbers="">timeouts {
+    create = "60m"
+    delete = "2h"
+  }
+}</code></pre></div></div></section></section><section class="stack" data-id="a201aaacc703ca9097485a65be48b7c3"><section data-id="462db82320457c27b07807affae4072c"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 88px; height: auto;" data-block-id="188ec43cd0e8cbd3bd45fc783ee64185"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Templates</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 219px; height: auto;" data-block-id="a802ad453a00460291d39b517ea91532"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>This is a way to store the definition of a file that can be interpolated differently based on variables passed to create a resource.</li>
+	<li>The best example of this is for either Kubernetes or ECS when defining a task definition.</li>
+	<li>These definitions needs to pull and store variables that can be different based on environments.</li>
+</ul>
+</div></div></section><section data-id="b5af84c8683b48f4300621820772350a"><div class="sl-block" data-block-type="text" style="width: 569px; left: 36px; top: 33px; height: auto;" data-block-id="640e2c7d0edeebecf6286e34b6b7bc22"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Template Example</h2>
+</div></div>
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 800px; height: 571px; left: 80px; top: 117px;" data-block-id="82fcd4adfaeb6690862d162008c91e95"><div class="sl-block-content notranslate" data-highlight-theme="a11y-dark" data-code-frame="osx" style="z-index: 11; font-size: 89%;"><pre class="php"><code style="padding: 7px;">[
+    {
+        "cpu": 10,
+        "essential": true,
+        "image": "datadog/agent",
+        "memoryReservation": 128,
+        "name": "dd-agent",
+        "portMappings": [
+            {
+                "containerPort": 8125,
+                "protocol": "udp"
+            }
+        ],
+        "privileged": true,
+        "environment": [
+            {
+                "name": "DD_API_KEY",
+                "value": "${datadog_license}"
+            },
+            {
+                "name": "DD_DOCKER_LABELS_AS_TAGS",
+                "value": "true"
+            },
+            {
+                "name": "DD_PROCESS_AGENT_ENABLED",
+                "value": "true"
+            }
+        ]
+    }
+]</code></pre></div></div></section></section><section class="stack" data-id="97fcd065794999edd883f8af4a59bfdd"><section data-id="4634320db95197a381c0d36948f3970b"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 88px; height: auto;" data-block-id="e4474f6015f03f271a1c8bf7b255d1fd"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Data Sources</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 219px; height: auto;" data-block-id="d40bd40f881f355e1b09dda9d5f8ed06"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>These are pulled from the provider and will being with "data" these allow for pulling data from a provider to use as a variable</li>
+	<li>The best examples of this is pulling parameter store variables to use as secret values or pulling new data from a shared source
+	<ul>
+		<li>I still recommend locking all versions but you could even pull latest amis from aws.</li>
+	</ul>
+	</li>
+</ul>
+</div></div></section><section data-id="60ae7cd17b9b086b41fd4e7677add5d2"><div class="sl-block" data-block-type="text" style="width: 569px; left: 36px; top: 33px; height: auto;" data-block-id="f7a168d666a8706b6c84f86fe94af305"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Data Example</h2>
+</div></div>
+
+
+
+
+<div class="sl-block" data-block-type="code" style="width: 800px; height: 571px; left: 80px; top: 117px;" data-block-id="9940cb6ba35f6ade122377b3a95ec0c3"><div class="sl-block-content notranslate" data-highlight-theme="a11y-dark" data-code-frame="osx" style="z-index: 11; font-size: 89%;"><pre class="php"><code style="padding: 7px;"># Find the latest available AMI that is tagged with Component = web
+data "aws_ami" "web" {
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+
+  filter {
+    name   = "tag:Component"
+    values = ["web", "myapp"]
+  }
+
+  most_recent = true
+}</code></pre></div></div></section></section><section class="stack" data-id="6fc3f9a22d5272106f1ca145a7e697f8"><section data-id="877af1e8142f2edb451891a05d9d8645"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 88px; height: auto;" data-block-id="8ddd7bf5bf281e85d0a899e172f7a0c7"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Terraform State</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 219px; height: auto;" data-block-id="ce51954bf136ab19ba871c3aeee6901b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>This is an important file that holds all of the values computed from after running terraform. </li>
+	<li>Keeping this file locally is frowned upon because it is always good to know what your infrastructure was before and other people can't access it.</li>
+	<li>Define a backend for your state!</li>
+</ul>
+</div></div></section><section data-id="1a0aee5c5449ba73b9a142ea74160f80"><div class="sl-block" data-block-type="text" style="width: 413px; left: 530px; top: 78px; height: auto;" data-block-id="12b6966ee054852177af210a6810afd7"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Backend</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 413px; left: 530px; top: 163px; height: auto;" data-block-id="c67cdfd7be6ce77cf858a1acf7bcf590"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 11; text-align: left;">
+<p><span style="color:rgb(51, 51, 51)">A "backend" in Terraform determines how state is loaded and how an operation such as </span>apply<span style="color:rgb(51, 51, 51)"> is executed. This abstraction enables non-local file state storage, remote execution, etc.</span></p>
+
+<p> </p>
+
+<p><span style="color:rgb(51, 51, 51)">These are placed at the top of your main.tf or in a seperate file called backend.tf</span></p>
+
+<p><span style="color:rgb(51, 51, 51)">Make file secure!</span></p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 500px; height: 560px; left: 11px; top: 70px;" data-block-id="b3c3cd0d44c865d98eae97cdd4146cb4"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 12;"><pre class="bash"><code>terraform {
+  backend "consul" {
+    address = "demo.consul.io"
+    scheme  = "https"
+    path    = "example_app/terraform_state"
+  }
+}
+
+terraform {
+  backend "s3" {
+    bucket = "mybucket"
+    key    = "path/to/my/key"
+    region = "us-east-1"
+  }
+}</code></pre></div></div></section></section><section data-id="93d571bdf5d48ce578169f34ee148a16"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 88px; height: auto;" data-block-id="b005fcdfc63cad460394bea82d12c37c"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>The First Deploy</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 219px; height: auto;" data-block-id="0b4f9d373270443ef2471921e7a0cddd"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>terraform init --backend=true
+	<ul>
+		<li>supplying backend = true will force terraform to use the backend you define or you can choose to run it locally and move the file to the backend location later</li>
+	</ul>
+	</li>
+	<li>terraform plan</li>
+	<li>terraform apply</li>
+</ul>
+</div></div></section><section class="stack" data-id="12d139e3d18d6532c30bcffb198f0c21"><section data-id="0f9fa2fdb1856469593b3fb801d79da2"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 88px; height: auto;" data-block-id="a3632fb66463f88f5fa06fdd95f21af7"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Basics Over! Let's Go Crazy?</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 219px; height: auto;" data-block-id="5ecaf907a88aeda6bc64de67bfe2b029"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>We need to go over a few more topics really before diving in to our first project.</li>
+	<li>Terraform is for providing updates to infrastructure first and foremost. If you choose to use terraform to push code it is best to split it into a seperate terraform codebase.</li>
+	<li>Creating environments and destroying them are simple that's why we make sure to "plan" for them.</li>
+</ul>
+</div></div></section><section data-id="ba723c2cd62688b9a784f56f82ad101d"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 266px; height: auto;" data-block-id="7c2ac70a5fa512896786a47c9dd58694"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Terraform Commands!</h1>
+</div></div></section><section data-id="d101b284aca16294fe1ea9b30d6052c5"><div class="sl-block" data-block-type="text" style="width: 384px; left: 48px; top: 105px; height: auto;" data-block-id="e3b7f622fb06a213031c1c5e9931cbad"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>Apply</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 404px; left: 38px; top: 210px; height: auto;" data-block-id="20e7b0e02225314d168a2ac3edbdb4ae"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin urna odio, aliquam vulputate faucibus id, elementum lobortis felis. Mauris urna dolor, placerat ac sagittis quis." style="text-align: left; z-index: 11;">
+<ul>
+	<li>Runs your terraform and creates the infrastructure and saves the state</li>
+	<li>Does not rollback!</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 384px; left: 528px; top: 105px; height: auto;" data-block-id="0690865a3f97248d049f504c53fe4584"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 12;">
+<h2>Destroy</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 384px; left: 528px; top: 210px; height: auto;" data-block-id="d514b0d9bf4b587ee14a4b2212eb858c"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin urna odio, aliquam vulputate faucibus id, elementum lobortis felis. Mauris urna dolor, placerat ac sagittis quis." style="text-align: left; z-index: 13;">
+<ul>
+	<li>Destroys all infrastructure unless you specify specific resources</li>
+	<li>Does not rollback!</li>
+</ul>
+</div></div></section><section data-id="3bb6450a3a9abe6a8999727b44afaa1b"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 189px; height: auto;" data-block-id="c3ae8558efd5d42b6cd6998c45b35643"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Plan</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 263px; height: auto;" data-block-id="e7add76a808a0851b8fbf551705d9c52"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>This is the most important command you will ever run</li>
+	<li>It goes through and pre determines many values and show exactly what it will do in an apply</li>
+	<li>This should ALWAYS be ran before apply.</li>
+</ul>
+</div></div></section><section data-id="16e27a0e4b35c2dde44d2ccd6a33c791"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 189px; height: auto;" data-block-id="5aa13e0f17458c3fa175b08fb211c21f"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Import</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 263px; height: auto;" data-block-id="fe62609fff10cf8eb590052058e69557"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>This feature is amazing and allows you to pull in pre defined resources in your terraform into your state.</li>
+	<li>If you have infrastructure already in your cloud you can define it as it is and run import for that resource and it will pull the values into your state.</li>
+</ul>
+</div></div></section><section data-id="7c347f72dafa5686ae41311c6dfc79bc"><div class="sl-block" data-block-type="image" data-block-id="bd43a1799d382ce3912ff78523e7f296" style="min-width: 4px; min-height: 4px; width: 513px; height: 599px; left: 224px; top: 51px;"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="600" data-natural-height="700" style="" data-lazy-loaded="" data-src="terraform-for-devs/de11c113f0a9b488eb3126c0adf67926.png"></div></div></section><section data-id="630bb514e9c059579ad033009ce8fd83"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="d369902c117dd59250737ab21f4e8d5e"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11;">
+<h2>If done correctly</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 140px;" data-block-id="2c50930c1d56930af1df18527adcbfb2"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>Each piece should be able to come up and down at will and not worry about issues</li>
+	<li>When new applies are done to modify old values like changing an instance size there is always a lifetime cycle event</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="22bcce548386dd38a5035c3fab5aa909" style="min-width: 30px; min-height: 30px; width: 640px; height: 142px; left: 160px; top: 427px;"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" data-code-frame="osx" style="z-index: 13;"><pre class="bash"><code data-line-numbers="">lifecycle {
+    create_before_destroy = true
+}</code></pre></div></div></section></section><section class="stack" data-id="29e84a76bc90679a926e4455f40c5c61"><section data-id="9ee5a96cb42e9e2fb413ffdf186b8a16"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 28px; height: auto;" data-block-id="757a3c5ed581b7be29701d5bef9552fb"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>How to Deploy Code With Terraform</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 194px;" data-block-id="d60a8a9a51472d94f98b68d07bc3138d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>Terraform was never meant to directly deploy application code.</li>
+	<li>In this day and age we have docker!</li>
+	<li>Docker places all your code into a single piece of infrastructure that can be pulled and executed.</li>
+	<li>Updates to application code are as simple as pushing a new docker tag.</li>
+</ul>
+</div></div></section><section data-id="842c88cac23f0bf7c3ac87536fe35e5d"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 42px; height: auto;" data-block-id="4ff31fedca8deb6b88de2baea63e3415"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Deploying Docker ECR</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 913px; height: 490px; left: 25px; top: 140px;" data-block-id="d1696cc58bd53de5e6104723bbcdc183"><div class="sl-block-style" style="z-index: 11; transform: rotate(360deg);"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 11;"><pre class="php"><code>#!/bin/bash
+set -o pipefail
+set -e
+
+# Move To terraform Directory
+cd $( cd "$( dirname "${BASH_SOURCE[0]}" )" &amp;&amp; pwd )
+
+# Set Environment Variables that need to be calculated
+source ./set-env.sh
+
+# Log in to Elastic Container Service
+eval `aws ecr get-login --region ${CCD_AWS_REGION} --no-include-email`
+
+PHP_REPOSITORY=${CCD_AWS_ACCOUNT_ID}.dkr.ecr.${CCD_AWS_REGION}.amazonaws.com/app-name/php
+
+# Build Container Images
+docker build -t $PHP_REPOSITORY -f ../build/php/Dockerfile ../
+
+# Tag Container Images &amp;&amp; Push New Containers
+docker tag $PHP_REPOSITORY $NODE_REPOSITORY:${APP_VERSION}
+docker push $PHP_REPOSITORY:${APP_VERSION}</code></pre></div></div></div></section></section><section class="stack" data-id="c62889115105fac0bb8d3f12d14b37a9"><section data-id="2ed144d88762af6ecf61ef0365cdb460"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 155px; height: auto;" data-block-id="d07f19036193937e743959f357b32c3a"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Now Let's Build An Application For Serverless Google Cloud Run</h1>
+</div></div></section><section data-id="651ee4e02c2edc83503aa7ca0d402a2a"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 42px; height: auto;" data-block-id="8fbdb07f9d1523cce92babfe5f655340"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;" dir="ui">
+<h2>Deploying Docker GCP</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 913px; height: 490px; left: 24px; top: 140px;" data-block-id="4f59443f51908a336660188d5bdc9921"><div class="sl-block-style" style="z-index: 11; transform: rotate(360deg);"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 11;"><pre class="php"><code># install gcloud
+gcloud auth configure-docker
+
+# build your container
+cd /path/to/dockerfile
+docker build .
+
+# [SOURCE_IMAGE] is the local image name or image ID 
+# [PROJECT-ID] is your GCP account project id
+docker tag [SOURCE_IMAGE] gcr.io/[PROJECT-ID]/php-app
+docker push gcr.io/[PROJECT-ID]/php-app</code></pre></div></div></div></section><section data-id="324a939f96d2d39fbce860219dfe3880"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 42px; height: auto;" data-block-id="88b6832457d57061b62790bb7ee51f20"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;" dir="ui">
+<h2>Create main.tf</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 913px; height: 490px; left: 24px; top: 140px;" data-block-id="d19a99879c4fa0dc2925ce7736aa745d"><div class="sl-block-style" style="z-index: 11; transform: rotate(360deg);"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 11;"><pre class="php"><code>terraform {
+  backend "gcs" {
+    bucket  = var.backend_bucket
+    prefix  = var.backend_prefix
+  }
+}
+
+provider "google" {
+  credentials = file("account.json")
+  project     = var.project_id
+  region      = var.region
+}
+
+module "cloudrun" {
+  source             = "./modules/cloudrun"
+  service_name       = var.service_name
+  project_id         = var.project_id
+  location           = var.region
+  url                = var.url
+  container_location = var.container_location
+  
+}
+</code></pre></div></div></div></section><section data-id="e2f977d5f6f501db4401a3050bc95f88"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 42px; height: auto;" data-block-id="cfb6d518dccb8161241024acc052aafd"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;" dir="ui">
+<h2>Create variables.tf</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 913px; height: 490px; left: 24px; top: 140px;" data-block-id="9207bf2588dd0e8d14790f509526fc69"><div class="sl-block-style" style="z-index: 11; transform: rotate(360deg);"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 11;"><pre class="bash"><code>variable "backend_bucket" {
+  type        = string
+  default     = "app_backend"
+  description = "The backend bucket location"
+}
+
+variable "backend_prefix" {
+  type        = string
+  default     = "terraform/state/prod"
+  description = "The prefix inside the bucket to go down into allowing you to swap environments if you wanted."
+}
+
+variable "project_id" {
+  type        = string
+  default     = "project_id"
+  description = "The project id associated to the gcp account."
+}
+
+variable "region" {
+  type        = string
+  default     = "us-central1"
+  description = "The gcp region to set the application."
+}
+
+variable "service_name" {
+  type        = string
+  default     = "cool-php-app-service"
+  description = "The gcp name for the cloud run service."
+}
+
+variable "url" {
+  type        = string
+  default     = "https://URL_ASSOCIATED_TO_ACCOUNT.com"
+  description = "The url the application should run at."
+}
+
+variable "container_location" {
+  type        = string
+  default     = "gcr url"
+  description = "The gcr location of our applications docker container."
+}
+</code></pre></div></div></div></section><section data-id="12bd281cc9dab123e6dbb70520f3bad8"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 42px; height: auto;" data-block-id="568555e76cc975bdd9b6e7ca3cbb8783"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;" dir="ui">
+<h2>Create Cloud Run Module</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 913px; height: 490px; left: 24px; top: 140px;" data-block-id="c2fe5a53114fd681c9ec5209cbd3c2e4"><div class="sl-block-style" style="z-index: 11; transform: rotate(360deg);"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 11;"><pre class="bash"><code>resource "google_cloud_run_service" "default" {
+  name     = var.service_name
+  location = var.location
+
+  metadata {
+    namespace = var.project_id
+  }
+
+  spec {
+    containers {
+      image = var.container_location
+    }
+  }
+}
+
+# The Service is ready to be used when the "Ready" condition is True
+# Due to Terraform and API limitations this is best accessed through a local variable
+locals {
+  cloud_run_status = {
+    for cond in google_cloud_run_service.default.status[0].conditions : cond.type =&gt; cond.status
+  }
+}
+
+resource "google_cloud_run_domain_mapping" "default" {
+location = var.location
+name = var.url
+
+  metadata {
+    namespace = var.project_id
+  }
+
+  spec {
+    route_name = google_cloud_run_service.default.name
+  }
+}
+</code></pre></div></div></div></section><section data-id="5c313a9709ca9f688309fa43dc1119ad"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 42px; height: auto;" data-block-id="b1c3a239e22dd79a10bb9992c1d40a32"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;" dir="ui">
+<h2>Create Cloud Run Variables</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 913px; height: 490px; left: 24px; top: 140px;" data-block-id="c3063554b898ce67d46d706045eae86e"><div class="sl-block-style" style="z-index: 11; transform: rotate(360deg);"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 11;"><pre class="bash"><code>variable "project_id" {
+  type        = string
+  description = "The project id associated to the gcp account."
+}
+
+variable "region" {
+  type        = string
+  default     = "us-central1"
+  description = "The gcp region to set the application."
+}
+
+variable "service_name" {
+  type        = string
+  default     = "cool-php-app-service"
+  description = "The gcp name for the cloud run service."
+}
+
+variable "url" {
+  type        = string
+  default     = "https://URL_ASSOCIATED_TO_ACCOUNT.com"
+  description = "The url the application should run at."
+}
+
+variable "container_location" {
+  type        = string
+  default     = "gcr url"
+  description = "The gcr location of our applications docker container."
+}
+</code></pre></div></div></div></section><section data-id="3d4a0ba6839c82e5d0f5dd3e203ac8e0"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 42px; height: auto;" data-block-id="ae02e52c59d9832baf7275300587353c"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;" dir="ui">
+<h2>Create Cloud Run Outputs</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 913px; height: 490px; left: 24px; top: 140px;" data-block-id="1b451383611e1f86c38745f9f393c1af"><div class="sl-block-style" style="z-index: 11; transform: rotate(360deg);"><div class="sl-block-content notranslate" data-highlight-theme="obsidian" style="z-index: 11;"><pre class="bash"><code>output "isReady" {
+  value = local.cloud_run_status["Ready"] == "True"
+}</code></pre></div></div></div></section></section><section data-id="59469cdc74332436fb5210859290c54a"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 155px; height: auto;" data-block-id="d18751bdad1147fcbd0a29bcc8e43dce"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Formatting built in with terraform fmt</h1>
+</div></div></section><section data-id="6ffc8dc130c9c3a04fd093bd201c79b2"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 140px; height: auto;" data-block-id="d68982b5af8f62dcfa450270c826eac5"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11;">
+<h1>Questions!?</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 280px; height: auto;" data-block-id="0d2d27677c2b657effabdbb6a681e84a"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Subtitle" style="z-index: 12;">
+<h2>I'll totally answer anything I can</h2>
+</div></div>
+
+
+</section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":1604625,"slug":"terraform-for-devs","title":"Terraform For Developers","description":"Teaching terraform to a software engineer, when and how to use off the shelf modules and how to customize them for your needs.","width":960,"height":700,"visibility":"all","published_at":"2019-09-21T14:04:31.787Z","sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/00ba353a1a21e9f99e771f25938bdd6b/thumb.jpg?1569078435","view_count":1,"user":{"id":480246,"username":"ashleyhutson","name":"Ashley Hutson","description":null,"thumbnail_url":"//graph.facebook.com/10208020913134591/picture","paid":true,"pro":false,"lite":true,"team_id":null,"settings":{"id":321979,"present_controls":true,"present_upsizing":true,"present_pointer":false,"present_notes":true,"default_deck_tag_id":null}},"background_transition":"fade","transition":"slide","theme_id":null,"theme_font":"merriweather","theme_color":"sky-blue","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":false,"rolling_links":false,"center":false,"shuffle":false,"should_loop":false,"share_notes":false,"slide_number":false,"slide_count":77,"rtl":false,"version":2,"collaborative":false,"deck_user_editor_limit":1,"data_updated_at":1569097236642,"font_typekit":null,"font_google":null,"time_limit":50,"upsizing_enabled":true,"notes":{}}};
+
+
+			// Use local fonts
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/reveal.min.js"></script>
+		<script src="lib/offline.js"></script>
+
+		<!-- Initialize the presentation -->
+		<script>
+			Reveal.initialize({
+				width: 960,
+				height: 700,
+				margin: 0.05,
+				
+
+				hash: true,
+				controls: true,
+				progress: true,
+				mouseWheel: false,
+				showNotes: false,
+				slideNumber: false,
+
+				autoSlide: 0,
+				autoSlideStoppable: true,
+
+				center: false,
+				shuffle: false,
+				loop: false,
+				rtl: false,
+
+				transition: "slide",
+				backgroundTransition: "fade",
+
+				highlight: {
+					escapeHTML: false
+				},
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js' },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'lib/reveal-plugins/zoom/zoom.js', async: true }
+				]
+			});
+		</script>
+
+		
+
+	</body>
+</html>
