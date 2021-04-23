@@ -1,4 +1,10 @@
 terraform {
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+      version = "3.65.0"
+    }
+  }
   backend "gcs" {
     bucket  = var.backend_bucket
     prefix  = var.backend_prefix
@@ -6,8 +12,8 @@ terraform {
 }
 
 provider "google" {
-  credentials = file("account.json")
-  project     = var.project_id
+  credentials = sensitive(file("account.json"))
+  project     = sensitive(var.project_id)
   region      = var.region
 }
 
@@ -18,5 +24,4 @@ module "cloudrun" {
   location           = var.region
   url                = var.url
   container_location = var.container_location
-
 }
