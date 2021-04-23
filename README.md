@@ -1,2 +1,2 @@
 # terraform-for-developers
-This is my cascadia php presentation for terraform for devs
+This is my Midwest PHP presentation for terraform for devs
